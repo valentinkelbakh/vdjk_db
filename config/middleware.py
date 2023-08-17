@@ -24,7 +24,7 @@ class WebhookMiddleware:
             }
 
             try:
-                _response = requests.post(webhook_url, data=json.dumps(payload), headers=headers)
+                _response = requests.post(webhook_url, data=payload, headers=headers)
             except Exception as ConnectionError:
                 pass
         return response
