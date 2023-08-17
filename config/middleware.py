@@ -3,7 +3,7 @@ import logging
 import json
 import requests
 from django.conf import settings
-
+from requests.exceptions import ConnectionError
 
 class WebhookMiddleware:
     def __init__(self, get_response):
@@ -22,5 +22,8 @@ class WebhookMiddleware:
                 "Content-Type": "application/json"
             }
 
-            _response = requests.post(webhook_url, data=json.dumps(payload), headers=headers)
+            try:
+                _response = requests.post(webhook_url, data=json.dumps(payload), headers=headers)
+            except Exception as ConnectionError:
+                pass
         return response
