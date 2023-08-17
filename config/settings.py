@@ -11,6 +11,8 @@ SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env('DEBUG')
 
+WEBHOOK_URL = env('WEBHOOK_URL')
+WEBHOOK_PASS = env('WEBHOOK_PASS')
 ALLOWED_HOSTS = ['valentinkelbakh.pythonanywhere.com',
                  'localhost', '127.0.0.1']
 
@@ -35,6 +37,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'config.middleware.WebhookMiddleware',
+
 ]
 
 ROOT_URLCONF = 'config.urls'
