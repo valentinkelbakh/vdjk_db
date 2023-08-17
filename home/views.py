@@ -7,8 +7,6 @@ from rest_framework.views import APIView
 
 from .models import *
 from .serializers import *
-from .filters import *
-
 
 class HolidayViewSet(viewsets.ModelViewSet):
     queryset = Holiday.objects.all()
