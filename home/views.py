@@ -11,20 +11,20 @@ from .permissions import CustomUserPermission
 class HolidayViewSet(viewsets.ModelViewSet):
     queryset = Holiday.objects.all()
     serializer_class = HolidaySerializer
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser, CustomUserPermission]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['month', 'day']
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser, CustomUserPermission]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser, CustomUserPermission]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
