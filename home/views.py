@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 
 from .models import *
 from .serializers import *
-
+from .permissions import CustomUserPermission
 class HolidayViewSet(viewsets.ModelViewSet):
     queryset = Holiday.objects.all()
     serializer_class = HolidaySerializer
