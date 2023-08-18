@@ -16,8 +16,8 @@ class Command(BaseCommand):
                 recipe = Recipe(
                     name=item['name'],
                     description=item['description'],
-                    img_link=item['img-link'],
-                    recipe_link=item['recipe-link']
+                    img_link=item['img_link'],
+                    recipe_link=item['recipe_link']
                 )
                 recipe.save()
                 self.stdout.write(self.style.SUCCESS(f"Imported recipe: {recipe.name}"))
