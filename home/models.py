@@ -54,6 +54,7 @@ class Holiday(models.Model):
     class Meta:
         ordering = ['month', 'day']
 
+
 class Project(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -62,7 +63,7 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 class Recipe(models.Model):
     name = models.CharField(max_length=255)
@@ -72,3 +73,7 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Webhook(models.Model):
+    url = models.URLField(blank=True, null=True)

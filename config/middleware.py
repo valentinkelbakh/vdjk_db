@@ -11,20 +11,22 @@ class WebhookMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        if request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
-            webhook_url = settings.WEBHOOK_URL
+        if settings.WEBHOOK_ENABLED:            
+            if request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
+                webhook_url = settings.WEBHOOK_URL
 
-            payload = {
-                "content": settings.WEBHOOK_PASS
-            }
+                payload = {
+                    "content": settings.WEBHOOK_PASS
+                }
 
-            headers = {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*"
-            }
+                headers = {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "ngrok-skip-browser-warning": "True"
+                }
 
-            try:
-                _response = requests.post(webhook_url, data=payload, headers=headers)
-            except Exception as ConnectionError:
-                pass
+                try:
+                    _response = requests.post(f'{webhook_url}/webhook-endpoint', json=payload, headers=headers)
+                except Exception as ConnectionError:
+                    pass
         return response

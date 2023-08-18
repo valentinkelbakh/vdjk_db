@@ -10,6 +10,7 @@ router = routers.DefaultRouter()
 router.register(r'holidays', views.HolidayViewSet)
 router.register(r'projects', views.ProjectViewSet)
 router.register(r'recipes', views.RecipeViewSet)
+router.register(r'set-webhook', views.WebhookViewSet, basename='set-webhook')
 
 urlpatterns = [
     path('', include(router.urls)),

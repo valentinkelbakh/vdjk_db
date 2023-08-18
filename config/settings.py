@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -10,9 +9,10 @@ env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env('DEBUG')
-
-WEBHOOK_URL = env('WEBHOOK_URL')
+WEBHOOK_URL = ''
 WEBHOOK_PASS = env('WEBHOOK_PASS')
+WEBHOOK_ENABLED = False
+
 ALLOWED_HOSTS = ['valentinkelbakh.pythonanywhere.com',
                  'localhost', '127.0.0.1']
 
@@ -37,7 +37,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'config.middleware.WebhookMiddleware',
+    'config.middleware.WebhookMiddleware',
 
 ]
 
