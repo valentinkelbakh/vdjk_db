@@ -63,6 +63,9 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        ordering = ['-id']
 
 
 class Recipe(models.Model):
@@ -73,7 +76,8 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
-
+    class Meta:
+        ordering = ['-id']
 
 class Webhook(models.Model):
     url = models.URLField(blank=True, null=True)
