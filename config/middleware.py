@@ -1,20 +1,25 @@
-import time
-import logging
-import json
+import asyncio
+
 import requests
 from django.conf import settings
-from requests.exceptions import ConnectionError
+from asgiref.sync import iscoroutinefunction, markcoroutinefunction
+
 
 class WebhookMiddleware:
+    endpoint_path = '/webhook-endpoint'
+    async_capable = True
+    sync_capable = False
+
     def __init__(self, get_response):
         self.get_response = get_response
+        if iscoroutinefunction(self.get_response):
+            markcoroutinefunction(self)
 
-    def __call__(self, request):
-        response = self.get_response(request)
-        if settings.WEBHOOK_ENABLED:            
+    async def __call__(self, request):
+        response = await self.get_response(request)
+        if settings.WEBHOOK_ENABLED and request.path != self.endpoint_path:
             if request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
-                webhook_url = settings.WEBHOOK_URL
-
+                webhook_url = settings.WEBHOOK_URL 
                 payload = {
                     "content": settings.WEBHOOK_PASS
                 }
@@ -25,8 +30,11 @@ class WebhookMiddleware:
                     "ngrok-skip-browser-warning": "True"
                 }
 
+
+                loop = asyncio.get_event_loop()
                 try:
-                    _response = requests.post(f'{webhook_url}/webhook-endpoint', json=payload, headers=headers)
-                except Exception as ConnectionError:
+                    _response = await loop.run_in_executor(None, lambda: requests.post(url=f'{webhook_url}{self.endpoint_path}', json=payload, headers=headers))
+                except BaseException as e:
                     pass
+                #asyncio.run(send_webhook())
         return response
