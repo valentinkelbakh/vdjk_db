@@ -1,6 +1,9 @@
 import json
+
 from django.core.management.base import BaseCommand
+
 from home.models import Project
+
 
 class Command(BaseCommand):
     help = 'Import data from JSON file into the database'

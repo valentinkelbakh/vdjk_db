@@ -1,1 +1,1 @@
-from .commands import import_recipes, import_holidays, import_projects
+from .commands import import_holidays, import_projects, import_recipes

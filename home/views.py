@@ -1,16 +1,11 @@
-from datetime import datetime
-from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import OuterRef, Subquery
-from rest_framework import permissions, status, viewsets
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from django.http import HttpResponse, HttpResponseBadRequest
 from django.conf import settings
+from django.http import HttpResponse, HttpResponseBadRequest
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions, viewsets
 
-
-from .models import *
-from .serializers import *
+from .models import Holiday, Project, Recipe, Webhook
 from .permissions import CustomUserPermission
+from .serializers import HolidaySerializer, ProjectSerializer, RecipeSerializer
 
 
 class HolidayViewSet(viewsets.ModelViewSet):

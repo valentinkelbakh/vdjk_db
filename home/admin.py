@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import Holiday, Project, Recipe
 
-# Register your models here.
+from .models import Holiday, Project, Recipe
 
 admin.site.register(Holiday)
 admin.site.register(Project)

@@ -1,7 +1,5 @@
-from django.core.validators import RegexValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from datetime import date
-from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Holiday(models.Model):
@@ -63,7 +61,7 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         ordering = ['-id']
 
@@ -76,8 +74,10 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
     class Meta:
         ordering = ['-id']
+
 
 class Webhook(models.Model):
     url = models.URLField(blank=True, null=True)
