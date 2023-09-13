@@ -10,10 +10,10 @@ router = routers.DefaultRouter()
 router.register(r'holidays', views.HolidayViewSet)
 router.register(r'projects', views.ProjectViewSet)
 router.register(r'recipes', views.RecipeViewSet)
-router.register(r'set-webhook', views.WebhookViewSet, basename='set-webhook')
 
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('set-webhook/', views.WebhookViewSet.as_view({'post': 'create', 'get': 'create'}), name='set-webhook'),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
