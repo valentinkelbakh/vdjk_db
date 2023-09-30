@@ -6,6 +6,7 @@ from rest_framework import routers
 
 from home import views
 
+admin.site.site_url = ''
 router = routers.DefaultRouter()
 router.register(r'holidays', views.HolidayViewSet)
 router.register(r'projects', views.ProjectViewSet)
