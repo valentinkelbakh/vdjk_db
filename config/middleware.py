@@ -17,22 +17,48 @@ class WebhookMiddleware:
 
     async def __call__(self, request):
         response = await self.get_response(request)
-        if settings.WEBHOOK_ENABLED and request.path != self.endpoint_path:
-            if request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
-                webhook_url = settings.WEBHOOK_URL
+        if (
+            settings.WEBHOOK
+            and settings.webhook_connected
+            and request.path != self.endpoint_path
+        ):
+            if (
+                request.method in ["POST", "PUT", "PATCH", "DELETE"]
+                and "/home" in request.path
+            ):
                 payload = {
-                    "content": settings.WEBHOOK_PASS
+                    "webhook_pass": settings.WEBHOOK_PASS,
+                    "update_subject": request.resolver_match.func.model_admin.model._meta.verbose_name_plural.__str__(),
                 }
 
                 headers = {
                     "Content-Type": "application/json",
+                    "Accept": "text/plain",
                     "Access-Control-Allow-Origin": "*",
-                    "ngrok-skip-browser-warning": "True"
+                    "ngrok-skip-browser-warning": "True",
                 }
 
                 loop = asyncio.get_event_loop()
-                try:
-                    _response = await loop.run_in_executor(None, lambda: requests.post(url=f'{webhook_url}{self.endpoint_path}', json=payload, headers=headers))
-                except BaseException as e:
-                    pass
+
+                for i in range(3):
+                    try:
+                        webhook_response = await loop.run_in_executor(
+                            executor=None,
+                            func=lambda: requests.post(
+                                url=f"{settings.WEBHOOK_URL}{self.endpoint_path}",
+                                json=payload,
+                                headers=headers,
+                            ),
+                        )
+                        if webhook_response.status_code == 200:
+                            break
+                    except BaseException as e:
+                    if i == 2:
+                        webhook = Webhook.objects.first()
+                        webhook.delete()
+                        )
+                        settings.webhook_connected = False
+                        break
+                    await asyncio.sleep(2)
+
         return response
