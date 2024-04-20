@@ -1,20 +1,25 @@
+import logging
+
 import requests
 from django.apps import AppConfig
 from django.conf import settings
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 
+logger = logging.getLogger(__name__)
+
 
 class HomeConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'home'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "home"
 
     def ready(self):
         if settings.WEBHOOK and not settings.webhook_connected:
             from .models import Webhook
+
             webhook = Webhook.objects.first()
             if not webhook:
-                logging.info("No last Webhook URL")
+                logger.info("No last Webhook URL")
                 return
             url = webhook.url
             try:
@@ -22,5 +27,10 @@ class HomeConfig(AppConfig):
                 if response.status_code == 200:
                     settings.webhook_connected = True
                     settings.WEBHOOK_URL = url
+                    logger.info(f"Webhook set on:\n{url}\n")
                 else:
-                    logging.info(f"Last Webhook URL is no longer available: {url}")
+                    webhook.delete()
+                    logger.info(f"Last Webhook URL is no longer available: {url}")
+            except Exception as e:
+                logger.error(f"Error setting webhook: {e}")
+        return
