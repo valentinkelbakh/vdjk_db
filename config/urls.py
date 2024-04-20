@@ -16,9 +16,13 @@ urlpatterns = [
     path("", include(router.urls)),
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-    path(
-        "set-webhook/",
-        views.WebhookViewSet.as_view({"post": "create", "get": "create"}),
-        name="set-webhook",
-    ),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+if settings.WEBHOOK:
+    urlpatterns.append(
+        path(
+            "set-webhook/",
+            views.WebhookViewSet.as_view({"post": "create", "get": "create"}),
+            name="set-webhook",
+        ),
+    )

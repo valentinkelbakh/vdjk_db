@@ -7,8 +7,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
     DEBUG=(bool, False),
-    WEBHOOK=(bool, False),
     DB_ENGINE=(str, "django.db.backends.sqlite3"),
+    WEBHOOK=(bool, False),
     DB_PORT=(int, 3306),
 )
 env.read_env(os.path.join(BASE_DIR, ".env"))
@@ -45,6 +45,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+if WEBHOOK:
+    MIDDLEWARE.append("config.middleware.WebhookMiddleware")
 
 ROOT_URLCONF = "config.urls"
 

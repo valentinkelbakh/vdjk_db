@@ -51,7 +51,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class WebhookViewSet(viewsets.ViewSet):
     def create(self, request):
         if request.method == "POST":
-            print(f'Webhook set on:\n{request.data["webhook_url"]}\n')
             if request.data["webhook_pass"] == settings.WEBHOOK_PASS:
                 settings.WEBHOOK_CONNECTED = True
                 settings.WEBHOOK_URL = request.data["webhook_url"]
