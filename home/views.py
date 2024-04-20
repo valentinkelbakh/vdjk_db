@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest
 from django_filters.rest_framework import DjangoFilterBackend
@@ -6,6 +8,8 @@ from rest_framework import permissions, viewsets
 from .models import Holiday, Project, Recipe, Webhook
 from .permissions import CustomUserPermission
 from .serializers import HolidaySerializer, ProjectSerializer, RecipeSerializer
+
+logger = logging.getLogger(__name__)
 
 
 class HolidayViewSet(viewsets.ModelViewSet):
@@ -44,5 +48,6 @@ class WebhookViewSet(viewsets.ViewSet):
                 webhook.save()
                 response = HttpResponse(content="Webhook received and processed", content_type="text/plain")
                 response["ngrok-skip-browser-warning"] = 'True'
+                logger.info(f'🔵 Webhook set on:\n{request.data["webhook_url"]}\n')
                 return response
         return HttpResponseBadRequest('Invalid')

@@ -1,8 +1,12 @@
 import asyncio
+import logging
 
 import requests
 from asgiref.sync import iscoroutinefunction, markcoroutinefunction
 from django.conf import settings
+from home.models import Webhook
+
+logger = logging.getLogger(__name__)
 
 
 class WebhookMiddleware:
@@ -52,13 +56,20 @@ class WebhookMiddleware:
                         )
                         if webhook_response.status_code == 200:
                             break
+                        logger.warning(
+                            f"🔵 Webhook not delivered: {webhook_response.status_code}"
+                        )
                     except BaseException as e:
+                        logger.error(f"🔵 Error sending webhook: {e}")
                     if i == 2:
                         webhook = Webhook.objects.first()
                         webhook.delete()
+                        logger.info(
+                            f"🔵 Webhook URL is no longer available: {settings.WEBHOOK_URL}"
                         )
                         settings.webhook_connected = False
                         break
+                    logger.info(f"🔵 Retrying webhook in 2 seconds...")
                     await asyncio.sleep(2)
 
         return response
