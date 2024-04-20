@@ -54,11 +54,12 @@ class WebhookViewSet(viewsets.ViewSet):
             if request.data["webhook_pass"] == settings.WEBHOOK_PASS:
                 settings.WEBHOOK_CONNECTED = True
                 settings.WEBHOOK_URL = request.data["webhook_url"]
-                webhook = Webhook.objects.get_or_create()
+                webhook = Webhook.objects.get_or_create()[0]
                 webhook.url = request.data["webhook_url"]
                 webhook.save()
                 response = HttpResponse(
-                    content="Webhook received and processed", content_type="text/plain"
+                    content="Webhook received and processed",
+                    content_type="text/plain",
                 )
                 response["ngrok-skip-browser-warning"] = "True"
                 logger.info(f'🔵 Webhook set on:\n{request.data["webhook_url"]}\n')
