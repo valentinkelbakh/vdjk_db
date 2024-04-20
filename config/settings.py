@@ -8,6 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(
     DEBUG=(bool, False),
     DB_ENGINE=(str, 'django.db.backends.sqlite3'),
+    WEBHOOK=(bool, False),
     DB_PORT=(int, 3306),
 )
 env.read_env(os.path.join(BASE_DIR, '.env'))
@@ -15,12 +16,14 @@ env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env('DEBUG')
-WEBHOOK_URL = ''
 WEBHOOK_PASS = env('WEBHOOK_PASS')
 WEBHOOK_ENABLED = False
+WEBHOOK = env("WEBHOOK")
+WEBHOOK_URL = ""
+webhook_connected = False
 
-ALLOWED_HOSTS = ['valentinkelbakh.pythonanywhere.com',
                  'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ["valentinkelbakh.pythonanywhere.com", "localhost", "127.0.0.1"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -43,9 +46,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'config.middleware.WebhookMiddleware',
 
 ]
+if WEBHOOK:
+    MIDDLEWARE.append("config.middleware.WebhookMiddleware")
 
 ROOT_URLCONF = 'config.urls'
 

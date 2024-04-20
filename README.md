@@ -29,7 +29,8 @@ python -m pip install -r requirements.txt
 
 Before start create .env file, based on .env.example.
 
-WEBHOOK_PASS is value needed for my unique implementation of webhook for bot to always have latest information as soon as changes to database are made. It should be some cryptographically secure random string and exactly the same string should be on .env on the bot side.
+App has webhook functionality so bot can always have latest information as soon as changes to database are made. WEBHOOK_PASS is value needed for my unique implementation of webhook. It should be some cryptographically secure random string and exactly the same string should be on .env on the bot side.
+
 
 In .env.example service is set to work with MySQL Server, specifically all starting with DB_. If .env not contains DB_\* values it uses sqlite instead (eg for testing purposes)
 

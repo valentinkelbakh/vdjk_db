@@ -34,15 +34,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 class WebhookViewSet(viewsets.ViewSet):
     def create(self, request):
-        if request.method == 'POST':
-            print(f'Webhook set on:\n{request.data["webhook_url"]}\n')
-            if request.data['content'] == settings.WEBHOOK_PASS:
-                settings.WEBHOOK_ENABLED = True
+        if request.method == "POST":
+            if request.data["webhook_pass"] == settings.WEBHOOK_PASS:
+                settings.webhook_connected = True
                 settings.WEBHOOK_URL = request.data["webhook_url"]
                 webhook = Webhook.objects.get_or_create()[0]
                 webhook.url = request.data["webhook_url"]
                 webhook.save()
-                response = HttpResponse(content="Webhook received and processed", content_type="text/plain")
-                response["ngrok-skip-browser-warning"] = 'True'
+                response = HttpResponse(
+                    content="Webhook received and processed", content_type="text/plain"
+                )
+                response["ngrok-skip-browser-warning"] = "True"
                 return response
         return HttpResponseBadRequest('Invalid')
