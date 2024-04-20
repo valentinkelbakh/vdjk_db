@@ -4,13 +4,14 @@ import logging
 import requests
 from asgiref.sync import iscoroutinefunction, markcoroutinefunction
 from django.conf import settings
+
 from home.models import Webhook
 
 logger = logging.getLogger(__name__)
 
 
 class WebhookMiddleware:
-    endpoint_path = '/webhook-endpoint'
+    endpoint_path = "/webhook-endpoint"
     async_capable = True
     sync_capable = False
 
@@ -23,7 +24,7 @@ class WebhookMiddleware:
         response = await self.get_response(request)
         if (
             settings.WEBHOOK
-            and settings.webhook_connected
+            and settings.WEBHOOK_CONNECTED
             and request.path != self.endpoint_path
         ):
             if (
@@ -67,7 +68,7 @@ class WebhookMiddleware:
                         logger.info(
                             f"🔵 Webhook URL is no longer available: {settings.WEBHOOK_URL}"
                         )
-                        settings.webhook_connected = False
+                        settings.WEBHOOK_CONNECTED = False
                         break
                     logger.info(f"🔵 Retrying webhook in 2 seconds...")
                     await asyncio.sleep(2)

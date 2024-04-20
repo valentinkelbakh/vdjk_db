@@ -8,11 +8,11 @@ logger = logging.getLogger(__name__)
 
 
 class HomeConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'home'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "home"
 
     def ready(self):
-        if settings.WEBHOOK and not settings.webhook_connected:
+        if settings.WEBHOOK and not settings.WEBHOOK_CONNECTED:
             from .models import Webhook
 
             webhook = Webhook.objects.first()
@@ -23,7 +23,7 @@ class HomeConfig(AppConfig):
             try:
                 response = requests.get(url)
                 if response.status_code == 200:
-                    settings.webhook_connected = True
+                    settings.WEBHOOK_CONNECTED = True
                     settings.WEBHOOK_URL = url
                     logger.info(f"Webhook set on:\n{url}\n")
                 else:

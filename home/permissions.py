@@ -6,14 +6,14 @@ class CustomUserPermission(BasePermission):
         if request.user.is_superuser:
             return True
 
-        if request.method == 'POST':
-            return request.user.is_active and request.user.has_perm('home.add_model')
+        if request.method == "POST":
+            return request.user.is_active and request.user.has_perm("home.add_model")
 
-        if request.method in ['PUT', 'PATCH']:
-            return request.user.is_active and request.user.has_perm('home.change_model')
+        if request.method in ["PUT", "PATCH"]:
+            return request.user.is_active and request.user.has_perm("home.change_model")
 
-        if request.method == 'DELETE':
-            return request.user.is_active and request.user.has_perm('home.delete_model')
+        if request.method == "DELETE":
+            return request.user.is_active and request.user.has_perm("home.delete_model")
 
     def has_permission(self, request, view):
         return self.__check_user(request)
