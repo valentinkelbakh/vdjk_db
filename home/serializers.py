@@ -9,7 +9,7 @@ class HolidaySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Holiday
-        fields = '__all__'
+        fields = "__all__"
 
     def get_date(self, obj):
         return f"{obj.get_month_display()} {obj.day}"
@@ -21,10 +21,10 @@ class HolidaySerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = '__all__'
+        fields = "__all__"
 
 
 class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = '__all__'
+        fields = "__all__"

@@ -4,13 +4,14 @@ import logging
 import requests
 from asgiref.sync import iscoroutinefunction, markcoroutinefunction
 from django.conf import settings
+
 from home.models import Webhook
 
 logger = logging.getLogger(__name__)
 
 
 class WebhookMiddleware:
-    endpoint_path = '/webhook-endpoint'
+    endpoint_path = "/webhook-endpoint"
     async_capable = True
     sync_capable = False
 

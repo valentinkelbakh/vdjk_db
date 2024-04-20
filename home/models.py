@@ -17,24 +17,25 @@ class Holiday(models.Model):
     DECEMBER = 12
 
     MONTH_CHOICES = (
-        (JANUARY, 'Январь'),
-        (FEBRUARY, 'Февраль'),
-        (MARCH, 'Март'),
-        (APRIL, 'Апрель'),
-        (MAY, 'Май'),
-        (JUNE, 'Июнь'),
-        (JULY, 'Июль'),
-        (AUGUST, 'Август'),
-        (SEPTEMBER, 'Сентябрь'),
-        (OCTOBER, 'Октябрь'),
-        (NOVEMBER, 'Ноябрь'),
-        (DECEMBER, 'Декабрь'),
+        (JANUARY, "Январь"),
+        (FEBRUARY, "Февраль"),
+        (MARCH, "Март"),
+        (APRIL, "Апрель"),
+        (MAY, "Май"),
+        (JUNE, "Июнь"),
+        (JULY, "Июль"),
+        (AUGUST, "Август"),
+        (SEPTEMBER, "Сентябрь"),
+        (OCTOBER, "Октябрь"),
+        (NOVEMBER, "Ноябрь"),
+        (DECEMBER, "Декабрь"),
     )
 
     name = models.CharField(max_length=255)
     description = models.TextField()
-    day = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(31)],
-                              blank=True, null=True)
+    day = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(31)], blank=True, null=True
+    )
     month = models.IntegerField(choices=MONTH_CHOICES, blank=True, null=True)
     link = models.URLField()
 
@@ -50,7 +51,7 @@ class Holiday(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['month', 'day']
+        ordering = ["month", "day"]
 
 
 class Project(models.Model):
@@ -63,7 +64,7 @@ class Project(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['-id']
+        ordering = ["-id"]
 
 
 class Recipe(models.Model):
@@ -76,7 +77,7 @@ class Recipe(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['-id']
+        ordering = ["-id"]
 
 
 class Webhook(models.Model):
