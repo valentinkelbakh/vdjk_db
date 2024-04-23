@@ -17,9 +17,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 DEBUG = env("DEBUG")
 WEBHOOK = env("WEBHOOK")
-WEBHOOK_URL = ""
 WEBHOOK_PASS = env("WEBHOOK_PASS")
-WEBHOOK_CONNECTED = False
 
 ALLOWED_HOSTS = ["valentinkelbakh.pythonanywhere.com", "localhost", "127.0.0.1"]
 

@@ -17,6 +17,7 @@ class WebhookMiddleware:
 
     def __init__(self, get_response):
         self.get_response = get_response
+        self.webhook = Webhook.objects.get_or_create()[0]
         if iscoroutinefunction(self.get_response):
             markcoroutinefunction(self)
 
@@ -24,13 +25,14 @@ class WebhookMiddleware:
         response = await self.get_response(request)
         if (
             settings.WEBHOOK
-            and settings.WEBHOOK_CONNECTED
+            and self.webhook.connected
             and request.path != self.endpoint_path
         ):
             if (
                 request.method in ["POST", "PUT", "PATCH", "DELETE"]
                 and "/home" in request.path
             ):
+
                 payload = {
                     "webhook_pass": settings.WEBHOOK_PASS,
                     "update_subject": request.resolver_match.func.model_admin.model._meta.verbose_name_plural.__str__(),

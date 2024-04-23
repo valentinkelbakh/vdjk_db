@@ -82,3 +82,4 @@ class Recipe(models.Model):
 
 class Webhook(models.Model):
     url = models.URLField(blank=True, null=True)
+    connected = models.BooleanField(default=False)
