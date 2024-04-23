@@ -1,7 +1,6 @@
-import asyncio
+import asyncio, aiohttp
 import logging
 
-import requests
 from asgiref.sync import iscoroutinefunction, markcoroutinefunction
 from django.conf import settings
 
@@ -48,29 +47,29 @@ class WebhookMiddleware:
                 loop = asyncio.get_event_loop()
 
                 for i in range(3):
+                    url = f"{self.webhook.url}{self.endpoint_path}"
                     try:
-                        webhook_response = await loop.run_in_executor(
-                            executor=None,
-                            func=lambda: requests.post(
-                                url=f"{settings.WEBHOOK_URL}{self.endpoint_path}",
-                                json=payload,
-                                headers=headers,
-                            ),
-                        )
-                        if webhook_response.status_code == 200:
+                        async with aiohttp.ClientSession() as session:
+                            async with session.post(
+                                url, json=payload, headers=headers
+                            ) as _response:
+                                webhook_response_text = await _response.text()
+                                webhook_response_status = _response.status
+                        logger.info(f"🔵 Webhook response: {webhook_response_text}")
+                        if webhook_response_status == 200:
                             break
                         logger.warning(
-                            f"🔵 Webhook not delivered: {webhook_response.status_code}"
+                            f"🔵 Webhook not delivered: {webhook_response_status}"
                         )
                     except BaseException as e:
                         logger.error(f"🔵 Error sending webhook: {e}")
                     if i == 2:
-                        webhook = Webhook.objects.first()
-                        webhook.delete()
                         logger.info(
-                            f"🔵 Webhook URL is no longer available: {settings.WEBHOOK_URL}"
+                            f"🔵 Webhook URL is no longer available: {self.webhook.url}"
                         )
-                        settings.WEBHOOK_CONNECTED = False
+                        self.webhook.url = ""
+                        self.webhook.connected = False
+                        self.webhook.save()
                         break
                     logger.info(f"🔵 Retrying webhook in 2 seconds...")
                     await asyncio.sleep(2)
