@@ -19,10 +19,15 @@ urlpatterns = [
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.WEBHOOK:
-    urlpatterns.append(
+    urlpatterns = urlpatterns + [
         path(
             "set-webhook/",
-            views.WebhookViewSet.as_view({"post": "create", "get": "create"}),
+            views.SetWebhookViewSet.as_view({"post": "create", "get": "create"}),
             name="set-webhook",
         ),
-    )
+        path(
+            "check-webhook/",
+            views.CheckWebhookViewSet.as_view({"post": "create"}),
+            name="check-webhook",
+        ),
+    ]

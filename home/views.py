@@ -48,10 +48,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filterset_fields = ["name"]
 
 
-class WebhookViewSet(viewsets.ViewSet):
+class SetWebhookViewSet(viewsets.ViewSet):
     def create(self, request):
         if request.method == "POST":
-            if request.data["webhook_pass"] == settings.WEBHOOK_PASS:
+            if (
+                request.data["webhook_url"]
+                and request.data["webhook_pass"] == settings.WEBHOOK_PASS
+            ):
                 webhook = Webhook.objects.get_or_create()[0]
                 webhook.url = request.data["webhook_url"]
                 webhook.connected = True
@@ -62,5 +65,26 @@ class WebhookViewSet(viewsets.ViewSet):
                 )
                 response["ngrok-skip-browser-warning"] = "True"
                 logger.info(f'🔵 Webhook set on:\n{request.data["webhook_url"]}\n')
+                return response
+        return HttpResponseBadRequest("Invalid")
+
+
+class CheckWebhookViewSet(viewsets.ViewSet):
+    def create(self, request):
+        if request.method == "POST":
+            webhook = Webhook.objects.get_or_create()[0]
+            if (
+                request.data["webhook_pass"] == settings.WEBHOOK_PASS
+                and webhook.connected
+                and request.data["webhook_url"] == webhook.url
+            ):
+                response = HttpResponse(
+                    content="Webhook is active",
+                    content_type="text/plain",
+                )
+                response["ngrok-skip-browser-warning"] = "True"
+                logger.info(
+                    f'🔵 Webhook connection confirmed:\n{request.data["webhook_url"]}\n'
+                )
                 return response
         return HttpResponseBadRequest("Invalid")
